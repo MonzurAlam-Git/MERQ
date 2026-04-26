@@ -2,7 +2,7 @@
 
 > *Nothing excess. Nothing missing.*
 
-A dark avant-garde luxury unisex clothing store. Built with Next.js 15 App Router as a full-stack portfolio project.
+A dark avant-garde luxury unisex clothing store. Built with Next.js 15 App Router as a full-stack project.
 
 ---
 
