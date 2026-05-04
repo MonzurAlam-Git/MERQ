@@ -1,1 +1,57 @@
+/* app/globals.css */
+@import "@fontsource/cormorant-garamond/400.css";
+@import "@fontsource/cormorant-garamond/500.css";
+@import "@fontsource/cormorant-garamond/300-italic.css";
+
 @import "tailwindcss";
+
+@theme {
+  /* MERQ color tokens */
+  --color-onyx: #111010;
+  --color-pitch: #1e1c18;
+  --color-smoke: #3a3830;
+  --color-ash: #7a7468;
+  --color-ivory: #e8e4de;
+  --color-bronze: #d4a853;
+  --color-accent: #3d9e8c; /* Typography */
+
+  --font-family-serif: "Cormorant Garamond", Georgia, serif;
+
+  /* Display scale */
+  --font-size-display-lg: clamp(3rem, 8vw, 7rem);
+  --line-height-display-lg: 1.05;
+  --letter-spacing-display-lg: -0.02em;
+
+  --font-size-display-md: clamp(2rem, 5vw, 4rem);
+  --line-height-display-md: 1.1;
+  --letter-spacing-display-md: -0.015em;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    @apply bg-onyx text-ivory antialiased;
+  }
+
+  body {
+    @apply min-h-screen;
+  }
+
+  *:focus-visible {
+    @apply outline-none ring-1 ring-accent ring-offset-1 ring-offset-onyx;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-onyx);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-smoke);
+    border-radius: 9999px;
+  }
+}
