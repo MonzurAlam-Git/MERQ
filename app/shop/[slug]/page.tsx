@@ -1,11 +1,12 @@
-import ProductGallery from "@/components/shop/ProductGallery";
+// app/shop/[slug]/page.tsx
+
 import ProductPanel from "@/components/shop/ProductPanel";
 import { PRODUCTS } from "@/lib/products";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ slug: string }>;
+type SearchParams = Promise<{ variant?: string }>;
 
 export async function generateStaticParams() {
   return PRODUCTS.map((p) => ({ slug: p.slug }));
@@ -25,23 +26,31 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductPage({ params }: { params: Params }) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
   const { slug } = await params;
+  const { variant } = await searchParams;
+
   const product = PRODUCTS.find((p) => p.slug === slug);
   if (!product) notFound();
 
-  const images = Array.from(
-    { length: 4 },
-    (_, i) => `https://picsum.photos/seed/${product.id}-${i}/800/1050`,
-  );
+  // Use URL variant if valid, otherwise fall back to first variant
+  const initialVariant = product.variants.includes(variant ?? "")
+    ? variant!
+    : product.variants[0];
 
   return (
-    <main className="min-h-screen bg-onyx pt-20">
+    <main className="min-h-screen bg-[#111010] pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="py-6 flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-[#7A7468]">
-          <Link href="/shop" className="hover:text-[#E8E4DE] transition-colors">
+          <a href="/shop" className="hover:text-[#E8E4DE] transition-colors">
             Shop
-          </Link>
+          </a>
           <span>/</span>
           <a
             href={`/shop?category=${product.category}`}
@@ -53,9 +62,8 @@ export default async function ProductPage({ params }: { params: Params }) {
           <span className="text-[#3A3830]">{product.name}</span>
         </nav>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-12 pb-24">
-          <ProductGallery images={images} productName={product.name} />
-          <ProductPanel product={product} />
+        <div className="pb-24">
+          <ProductPanel product={product} initialVariant={initialVariant} />
         </div>
       </div>
     </main>

@@ -2,16 +2,12 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "picsum.photos",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com", // if you go Option A
-      },
+      { protocol: "https", hostname: "i.ibb.co" },
+      { protocol: "https", hostname: "picsum.photos" },
     ],
   },
 };
 
 export default nextConfig;
+
+// next.config.ts
