@@ -3,6 +3,7 @@
 import ProductPanel from "@/components/shop/ProductPanel";
 import { PRODUCTS } from "@/lib/products";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ slug: string }>;
@@ -48,9 +49,9 @@ export default async function ProductPage({
     <main className="min-h-screen bg-[#111010] pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="py-6 flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-[#7A7468]">
-          <a href="/shop" className="hover:text-[#E8E4DE] transition-colors">
+          <Link href="/shop" className="hover:text-[#E8E4DE] transition-colors">
             Shop
-          </a>
+          </Link>
           <span>/</span>
           <a
             href={`/shop?category=${product.category}`}

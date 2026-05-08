@@ -1,5 +1,8 @@
 // next.config.ts
 const nextConfig = {
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "i.ibb.co" },

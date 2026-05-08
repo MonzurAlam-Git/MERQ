@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 
 import Navbar from "@/components/layout/navbar";
+import { ViewTransitions } from "next-view-transitions";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -23,11 +24,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className="bg-onyx text-ivory">
-        <Navbar />
-        <main>{children}</main>
-      </body>
-    </html>
+    <ViewTransitions>
+      <html lang="en" className="dark">
+        <body className="bg-onyx text-ivory">
+          <Navbar />
+          <main>{children}</main>
+        </body>
+      </html>
+    </ViewTransitions>
   );
 }

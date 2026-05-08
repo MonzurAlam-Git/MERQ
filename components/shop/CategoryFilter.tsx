@@ -48,7 +48,7 @@ export default function CategoryFilter() {
           >
             {label}
             {isActive && (
-              <span className="absolute bottom-0 left-0 right-0 h-px bg-[#D4A853]" />
+              <span className="absolute bottom-0 left-0 right-0 h-px bg-accent" />
             )}
           </button>
         );

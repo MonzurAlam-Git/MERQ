@@ -58,9 +58,6 @@ export default function NavDrawer() {
 
       {/* Drawer panel */}
       <div
-        /* @ts-expect-error — inert is a valid HTML attribute, not yet in React's types  */
-        // inert={isOpen ? undefined : ""}
-
         inert={isOpen ? false : true}
         aria-label="Navigation menu"
         className={`fixed top-16 right-0 z-[60] h-[calc(100vh-4rem)] w-full md:w-72 bg-onyx border-l border-[#1E1C18] flex flex-col transition-transform duration-300 ease-in-out ${

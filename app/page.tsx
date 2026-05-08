@@ -1,5 +1,7 @@
 // app/page.tsx
 
+import { Link } from "next-view-transitions";
+
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-onyx">
@@ -13,6 +15,24 @@ export default function HomePage() {
           <br />
           Nothing missing.
         </h1>
+
+        {/* Animated CTA */}
+        <Link
+          href="/shop"
+          className="group inline-flex items-center gap-3 text-ivory text-sm tracking-[0.2em] uppercase hover:text-accent"
+        >
+          <span className="relative ">
+            Enter MERQ
+            {/* Animated underline */}
+            <span className="absolute  left-0 bottom-0 h-px w-0 bg-accent transition-all duration-500 ease-out group-hover:w-full " />
+          </span>
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-300 group-hover:translate-x-1"
+          >
+            →
+          </span>
+        </Link>
       </section>
     </main>
   );
