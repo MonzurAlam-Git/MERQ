@@ -6,7 +6,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-export default function ProductCard({ product }: { product: Product }) {
+type Props = {
+  product: Product;
+  priority?: number; // optional index for priority loading
+};
+
+export default function ProductCard({ product, priority }: Props) {
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
 
   const imageSrc =
@@ -26,6 +31,7 @@ export default function ProductCard({ product }: { product: Product }) {
               src={imageSrc}
               alt={`${product.name} in ${selectedVariant}`}
               fill
+              priority={priority !== undefined && priority < 3}
               className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />

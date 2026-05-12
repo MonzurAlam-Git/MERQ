@@ -2,6 +2,7 @@
 "use client";
 
 import { Product, VARIANT_COLORS } from "@/lib/products";
+import { useCartStore } from "@/lib/store/cartStore";
 import { useState } from "react";
 import ProductGallery from "./ProductGallery";
 
@@ -15,16 +16,23 @@ export default function ProductPanel({ product, initialVariant }: Props) {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeError, setSizeError] = useState(false);
 
+  const addItem = useCartStore((state) => state.addItem);
+
   function handleAddToCart() {
     if (!selectedSize) {
       setSizeError(true);
       return;
     }
     setSizeError(false);
-    console.log("Add to cart:", {
-      product: product.slug,
+    addItem({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
       variant: selectedVariant,
       size: selectedSize,
+      image:
+        product.images[selectedVariant] ?? product.images[product.variants[0]],
     });
   }
 

@@ -92,3 +92,12 @@
     border-radius: 9999px;
   }
 }
+/* app/globals.css */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
