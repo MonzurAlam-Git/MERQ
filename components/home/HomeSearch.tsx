@@ -115,7 +115,7 @@ export default function HomeSearch() {
                         ))}
                       </div>
                       <span className="text-[#7A7468] text-sm">
-                        ${product.price.toLocaleString()}
+                        {product.priceFormatted}
                       </span>
                       <svg
                         width="14"

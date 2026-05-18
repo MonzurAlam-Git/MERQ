@@ -1,7 +1,8 @@
 // app/shop/[slug]/page.tsx
 
 import ProductPanel from "@/components/shop/ProductPanel";
-import { PRODUCTS } from "@/lib/products";
+import { db } from "@/lib/db";
+import { formatProduct } from "@/lib/products";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -10,7 +11,8 @@ type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<{ variant?: string }>;
 
 export async function generateStaticParams() {
-  return PRODUCTS.map((p) => ({ slug: p.slug }));
+  const products = await db.product.findMany({ select: { slug: true } });
+  return products.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -19,11 +21,11 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const product = PRODUCTS.find((p) => p.slug === slug);
+  const product = await db.product.findUnique({ where: { slug } });
   if (!product) return { title: "Not Found — MERQ" };
   return {
     title: `${product.name} — MERQ`,
-    description: `${product.name}. $${product.price.toLocaleString()}.`,
+    description: `${product.name}. $${(product.price / 100).toLocaleString()}.`,
   };
 }
 
@@ -37,10 +39,11 @@ export default async function ProductPage({
   const { slug } = await params;
   const { variant } = await searchParams;
 
-  const product = PRODUCTS.find((p) => p.slug === slug);
-  if (!product) notFound();
+  const raw = await db.product.findUnique({ where: { slug } });
+  if (!raw) notFound();
 
-  // Use URL variant if valid, otherwise fall back to first variant
+  const product = formatProduct(raw);
+
   const initialVariant = product.variants.includes(variant ?? "")
     ? variant!
     : product.variants[0];

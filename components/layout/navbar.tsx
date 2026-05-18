@@ -1,12 +1,14 @@
 // components/layout/Navbar.tsx
 
+import { auth, signOut } from "@/auth";
 import CartButton from "@/components/cart/CartButton";
 import Link from "next/link";
 import { Suspense } from "react";
 import NavDrawer from "./NavDrawer";
 import NavSearch from "./NavSearch";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
   return (
     <header className="fixed top-0 left-0 right-0 z-[55] bg-[#111010]/90 backdrop-blur-sm border-b border-[#1E1C18]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,6 +43,28 @@ export default function Navbar() {
             <Suspense>
               <NavSearch />
             </Suspense>
+            {session?.user ? (
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut({ redirectTo: "/" });
+                }}
+              >
+                <button
+                  type="submit"
+                  className="text-[11px] tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
+                >
+                  Sign out
+                </button>
+              </form>
+            ) : (
+              <Link
+                href="/login"
+                className="text-[11px] tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
+              >
+                Sign in
+              </Link>
+            )}
             <CartButton />
           </div>
 

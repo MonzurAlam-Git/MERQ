@@ -1,51 +1,19 @@
-// lib/products.ts — add at the bottom
+// prisma/seed.ts
+import { neon } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
+import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
 
-import type { Product as PrismaProduct } from "@prisma/client";
+const sql = neon(process.env.DATABASE_URL!);
+const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
+const db = new PrismaClient({ adapter });
 
-// The shape of a product as it comes back from the database
-export type DbProduct = Omit<PrismaProduct, "images" | "price"> & {
-  price: number; // still in cents from DB
-  images: Record<string, string>; // cast from Prisma JsonValue
-  priceFormatted: string; // e.g. "$980"
-};
-
-// Converts a raw Prisma product to a usable DbProduct
-export function formatProduct(p: PrismaProduct): DbProduct {
-  return {
-    ...p,
-    images: p.images as Record<string, string>,
-    priceFormatted: `$${(p.price / 100).toLocaleString()}`,
-  };
-}
-
-export type ProductCategory =
-  | "outerwear"
-  | "tailoring"
-  | "knitwear"
-  | "shirts"
-  | "dresses"
-  | "accessories";
-
-export type ProductBadge = "bestseller" | "new";
-
-export type Product = {
-  id: number;
-  name: string;
-  category: ProductCategory;
-  price: number;
-  variants: string[];
-  sizes: string[];
-  badge?: ProductBadge;
-  slug: string;
-  images: Record<string, string>; // { "Onyx": "url", "Smoke": "url" }
-};
-
-export const PRODUCTS: Product[] = [
+const products = [
   {
     id: 1,
     name: "Oversized Structured Coat",
     category: "outerwear",
-    price: 980,
+    price: 98000,
     variants: ["Onyx", "Smoke", "Dune"],
     sizes: ["XS", "S", "M", "L", "XL"],
     badge: "bestseller",
@@ -60,7 +28,7 @@ export const PRODUCTS: Product[] = [
     id: 2,
     name: "Raw-Edge Wool Overcoat",
     category: "outerwear",
-    price: 1100,
+    price: 110000,
     variants: ["Pitch", "Charcoal"],
     sizes: ["XS", "S", "M", "L"],
     badge: "new",
@@ -74,9 +42,10 @@ export const PRODUCTS: Product[] = [
     id: 3,
     name: "Cocoon Leather Jacket",
     category: "outerwear",
-    price: 1350,
+    price: 135000,
     variants: ["Onyx", "Tobacco"],
     sizes: ["XS", "S", "M", "L"],
+    badge: null,
     slug: "cocoon-leather-jacket",
     images: {
       Onyx: "https://i.ibb.co/7N4vZnJr/product-03-onyx.jpg",
@@ -87,9 +56,10 @@ export const PRODUCTS: Product[] = [
     id: 4,
     name: "Deconstructed Field Coat",
     category: "outerwear",
-    price: 860,
+    price: 86000,
     variants: ["Ash", "Sand", "Slate"],
     sizes: ["XS", "S", "M", "L", "XL"],
+    badge: null,
     slug: "deconstructed-field-coat",
     images: {
       Ash: "https://i.ibb.co/jXnDjsh/product-04-ash.jpg",
@@ -101,7 +71,7 @@ export const PRODUCTS: Product[] = [
     id: 5,
     name: "Architectural Blazer",
     category: "tailoring",
-    price: 720,
+    price: 72000,
     variants: ["Onyx", "Dune", "Smoke"],
     sizes: ["XS", "S", "M", "L", "XL"],
     badge: "bestseller",
@@ -116,9 +86,10 @@ export const PRODUCTS: Product[] = [
     id: 6,
     name: "Wide-Leg Precision Trouser",
     category: "tailoring",
-    price: 420,
+    price: 42000,
     variants: ["Onyx", "Ash", "Ivory"],
     sizes: ["XS", "S", "M", "L", "XL"],
+    badge: null,
     slug: "wide-leg-precision-trouser",
     images: {
       Onyx: "https://i.ibb.co/zhdpDgTG/product-06-onyx.jpg",
@@ -130,7 +101,7 @@ export const PRODUCTS: Product[] = [
     id: 7,
     name: "Deconstructed Suit Jacket",
     category: "tailoring",
-    price: 850,
+    price: 85000,
     variants: ["Smoke", "Charcoal"],
     sizes: ["XS", "S", "M", "L"],
     badge: "new",
@@ -144,9 +115,10 @@ export const PRODUCTS: Product[] = [
     id: 8,
     name: "Knife-Pleat Trouser",
     category: "tailoring",
-    price: 385,
+    price: 38500,
     variants: ["Onyx", "Slate", "Sand"],
     sizes: ["XS", "S", "M", "L", "XL"],
+    badge: null,
     slug: "knife-pleat-trouser",
     images: {
       Onyx: "https://i.ibb.co/kVLPXPdZ/product-08-onyx.jpg",
@@ -158,7 +130,7 @@ export const PRODUCTS: Product[] = [
     id: 9,
     name: "Heavyweight Cotton Turtleneck",
     category: "knitwear",
-    price: 195,
+    price: 19500,
     variants: ["Onyx", "Ivory", "Ash"],
     sizes: ["XS", "S", "M", "L", "XL"],
     badge: "bestseller",
@@ -173,9 +145,10 @@ export const PRODUCTS: Product[] = [
     id: 10,
     name: "Merino Structured Cardigan",
     category: "knitwear",
-    price: 310,
+    price: 31000,
     variants: ["Smoke", "Dune", "Ivory"],
     sizes: ["XS", "S", "M", "L"],
+    badge: null,
     slug: "merino-structured-cardigan",
     images: {
       Smoke: "https://i.ibb.co/DPLLX6q6/product-10-smoke.jpg",
@@ -187,7 +160,7 @@ export const PRODUCTS: Product[] = [
     id: 11,
     name: "Ribbed Mock-Neck Sweater",
     category: "knitwear",
-    price: 225,
+    price: 22500,
     variants: ["Onyx", "Ash", "Stone"],
     sizes: ["XS", "S", "M", "L", "XL"],
     badge: "new",
@@ -202,9 +175,10 @@ export const PRODUCTS: Product[] = [
     id: 12,
     name: "Cashmere Boxy Crewneck",
     category: "knitwear",
-    price: 380,
+    price: 38000,
     variants: ["Ivory", "Smoke", "Bronze"],
     sizes: ["XS", "S", "M", "L"],
+    badge: null,
     slug: "cashmere-boxy-crewneck",
     images: {
       Ivory: "https://i.ibb.co/C3r5hzZY/product-12-ivory.jpg",
@@ -216,9 +190,10 @@ export const PRODUCTS: Product[] = [
     id: 13,
     name: "Asymmetric Linen Shirt",
     category: "shirts",
-    price: 185,
+    price: 18500,
     variants: ["Ivory", "Dune", "Slate"],
     sizes: ["XS", "S", "M", "L", "XL"],
+    badge: null,
     slug: "asymmetric-linen-shirt",
     images: {
       Ivory: "https://i.ibb.co/qHfqhSC/product-13-ivory.jpg",
@@ -230,7 +205,7 @@ export const PRODUCTS: Product[] = [
     id: 14,
     name: "Cotton Poplin Banded Shirt",
     category: "shirts",
-    price: 165,
+    price: 16500,
     variants: ["Ivory", "Onyx", "Ash"],
     sizes: ["XS", "S", "M", "L", "XL"],
     badge: "bestseller",
@@ -245,9 +220,10 @@ export const PRODUCTS: Product[] = [
     id: 15,
     name: "Oversized Oxford Shirt",
     category: "shirts",
-    price: 175,
+    price: 17500,
     variants: ["Ivory", "Stone", "Slate"],
     sizes: ["XS", "S", "M", "L", "XL"],
+    badge: null,
     slug: "oversized-oxford-shirt",
     images: {
       Ivory: "https://i.ibb.co/FLLsYHYm/product-15-ivory.jpg",
@@ -259,7 +235,7 @@ export const PRODUCTS: Product[] = [
     id: 16,
     name: "Elongated Wool Column Dress",
     category: "dresses",
-    price: 520,
+    price: 52000,
     variants: ["Onyx", "Smoke", "Dune"],
     sizes: ["XS", "S", "M", "L"],
     badge: "new",
@@ -274,9 +250,10 @@ export const PRODUCTS: Product[] = [
     id: 17,
     name: "Minimal Slip Dress",
     category: "dresses",
-    price: 340,
+    price: 34000,
     variants: ["Ivory", "Ash", "Bronze"],
     sizes: ["XS", "S", "M", "L", "XL"],
+    badge: null,
     slug: "minimal-slip-dress",
     images: {
       Ivory: "https://i.ibb.co/JwbXBpS8/product-17-ivory.jpg",
@@ -288,7 +265,7 @@ export const PRODUCTS: Product[] = [
     id: 18,
     name: "Draped Jersey Maxi",
     category: "dresses",
-    price: 395,
+    price: 39500,
     variants: ["Onyx", "Slate"],
     sizes: ["XS", "S", "M", "L"],
     badge: "bestseller",
@@ -302,7 +279,7 @@ export const PRODUCTS: Product[] = [
     id: 19,
     name: "Leather Structured Tote",
     category: "accessories",
-    price: 520,
+    price: 52000,
     variants: ["Onyx", "Tobacco", "Dune"],
     sizes: ["One size"],
     badge: "new",
@@ -317,9 +294,10 @@ export const PRODUCTS: Product[] = [
     id: 20,
     name: "Bronze-Clasp Leather Belt",
     category: "accessories",
-    price: 155,
+    price: 15500,
     variants: ["Onyx", "Tan"],
     sizes: ["XS/S", "M/L", "XL"],
+    badge: null,
     slug: "bronze-clasp-leather-belt",
     images: {
       Onyx: "https://i.ibb.co/j9YRRNYm/product-20-onyx.jpg",
@@ -328,19 +306,25 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
-// Lookup map: variant name → swatch color
-export const VARIANT_COLORS: Record<string, string> = {
-  Onyx: "#111010",
-  Smoke: "#3A3830",
-  Dune: "#C4B49A",
-  Pitch: "#1E1C18",
-  Charcoal: "#2D2D2D",
-  Tobacco: "#7B5C3A",
-  Ash: "#7A7468",
-  Sand: "#D4C9B0",
-  Slate: "#6B7280",
-  Ivory: "#E8E4DE",
-  Stone: "#8A8480",
-  Bronze: "#D4A853",
-  Tan: "#C4A882",
-};
+async function main() {
+  console.log("Seeding products...");
+
+  for (const product of products) {
+    await db.product.upsert({
+      where: { id: product.id },
+      update: product,
+      create: product,
+    });
+  }
+
+  console.log("Done. 20 products seeded.");
+}
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await db.$disconnect();
+  });

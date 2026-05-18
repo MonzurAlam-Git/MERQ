@@ -1,17 +1,18 @@
 // components/shop/ProductCard.tsx
 "use client";
 
-import { Product, VARIANT_COLORS } from "@/lib/products";
+import { DbProduct, VARIANT_COLORS } from "@/lib/products";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-type Props = {
-  product: Product;
-  priority?: number; // optional index for priority loading
-};
-
-export default function ProductCard({ product, priority }: Props) {
+export default function ProductCard({
+  product,
+  priority = false,
+}: {
+  product: DbProduct;
+  priority?: boolean;
+}) {
   const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
 
   const imageSrc =
@@ -19,7 +20,7 @@ export default function ProductCard({ product, priority }: Props) {
 
   return (
     <div className="group relative">
-      {/* Entire card is the navigation target */}
+      {/* Navigation target */}
       <Link
         href={`/shop/${product.slug}?variant=${encodeURIComponent(selectedVariant)}`}
         className="block"
@@ -31,7 +32,7 @@ export default function ProductCard({ product, priority }: Props) {
               src={imageSrc}
               alt={`${product.name} in ${selectedVariant}`}
               fill
-              priority={priority !== undefined && priority < 3}
+              priority={priority}
               className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
               sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
@@ -66,12 +67,12 @@ export default function ProductCard({ product, priority }: Props) {
             {product.name}
           </h3>
           <span className="text-[#7A7468] text-sm shrink-0">
-            ${product.price.toLocaleString()}
+            {product.priceFormatted}
           </span>
         </div>
       </Link>
 
-      {/* Swatches — outside the Link, stop propagation */}
+      {/* Swatches — outside Link to prevent navigation on swatch click */}
       <div className="flex items-center gap-1.5">
         {product.variants.map((v) => {
           const isActive = v === selectedVariant;

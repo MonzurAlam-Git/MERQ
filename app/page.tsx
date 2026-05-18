@@ -1,16 +1,18 @@
 // app/page.tsx
 
 import ProductCard from "@/components/shop/product-card";
-import { PRODUCTS } from "@/lib/products";
+import { db } from "@/lib/db";
+import { formatProduct } from "@/lib/products";
 import Link from "next/link";
 
-// Hand-picked featured product IDs
-const FEATURED_IDS = [1, 5, 9, 18];
+export default async function HomePage() {
+  const FEATURED_IDS = [1, 5, 9, 18];
 
-export default function HomePage() {
-  const featured = FEATURED_IDS.map((id) =>
-    PRODUCTS.find((p) => p.id === id),
-  ).filter(Boolean) as typeof PRODUCTS;
+  const raw = await db.product.findMany({
+    where: { id: { in: FEATURED_IDS } },
+    orderBy: { id: "asc" },
+  });
+  const featured = raw.map(formatProduct);
 
   return (
     <main className="bg-[#111010]">

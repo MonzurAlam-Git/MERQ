@@ -1,6 +1,6 @@
 # MERQ
 
-> *Nothing excess. Nothing missing.*
+> _Nothing excess. Nothing missing._
 
 A dark avant-garde luxury unisex clothing store. Built with Next.js 15 App Router as a full-stack portfolio project.
 
@@ -8,19 +8,19 @@ A dark avant-garde luxury unisex clothing store. Built with Next.js 15 App Route
 
 ## Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS + shadcn/ui |
-| Auth | NextAuth v5 |
-| Database | PostgreSQL + Prisma (Neon DB) |
-| Payments | Stripe (Payment Intents API) |
-| Images | Cloudinary |
-| State | Zustand |
-| AI | Vercel AI SDK + Anthropic Claude |
-| Animation | Framer Motion |
-| Deployment | Vercel |
+| Layer      | Technology                       |
+| ---------- | -------------------------------- |
+| Framework  | Next.js 15 (App Router)          |
+| Language   | TypeScript                       |
+| Styling    | Tailwind CSS + shadcn/ui         |
+| Auth       | NextAuth v5                      |
+| Database   | PostgreSQL + Prisma (Neon DB)    |
+| Payments   | Stripe (Payment Intents API)     |
+| Images     | Cloudinary                       |
+| State      | Zustand                          |
+| AI         | Vercel AI SDK + Anthropic Claude |
+| Animation  | Framer Motion                    |
+| Deployment | Vercel                           |
 
 ---
 
@@ -139,20 +139,18 @@ merq/
 
 ## Design Tokens
 
-| Token | Hex | Usage |
-|---|---|---|
-| Onyx | `#111010` | Page background |
-| Pitch | `#1E1C18` | Cards / surfaces |
-| Smoke | `#3A3830` | Borders |
-| Ash | `#7A7468` | Body text |
-| Ivory | `#E8E4DE` | Headings / CTAs |
+| Token  | Hex       | Usage                  |
+| ------ | --------- | ---------------------- |
+| Onyx   | `#111010` | Page background        |
+| Pitch  | `#1E1C18` | Cards / surfaces       |
+| Smoke  | `#3A3830` | Borders                |
+| Ash    | `#7A7468` | Body text              |
+| Ivory  | `#E8E4DE` | Headings / CTAs        |
 | Bronze | `#D4A853` | Accent — use sparingly |
 
 Typography: **Cormorant Garamond** (display) · system sans (UI/body)
 
 ---
-
-
 
 ## Catalog
 

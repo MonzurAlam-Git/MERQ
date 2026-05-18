@@ -1,13 +1,13 @@
 // components/shop/ProductPanel.tsx
 "use client";
 
-import { Product, VARIANT_COLORS } from "@/lib/products";
+import { DbProduct, VARIANT_COLORS } from "@/lib/products";
 import { useCartStore } from "@/lib/store/cartStore";
 import { useState } from "react";
 import ProductGallery from "./ProductGallery";
 
 type Props = {
-  product: Product;
+  product: DbProduct;
   initialVariant: string;
 };
 
@@ -15,7 +15,6 @@ export default function ProductPanel({ product, initialVariant }: Props) {
   const [selectedVariant, setSelectedVariant] = useState(initialVariant);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeError, setSizeError] = useState(false);
-
   const addItem = useCartStore((state) => state.addItem);
 
   function handleAddToCart() {
@@ -61,9 +60,7 @@ export default function ProductPanel({ product, initialVariant }: Props) {
           <h1 className="font-serif text-[#E8E4DE] text-3xl md:text-4xl leading-tight mb-3">
             {product.name}
           </h1>
-          <p className="text-[#7A7468] text-lg">
-            ${product.price.toLocaleString()}
-          </p>
+          <p className="text-[#7A7468] text-lg">{product.priceFormatted}</p>
         </div>
 
         <div className="w-12 h-px bg-[#3A3830]" />
@@ -96,7 +93,9 @@ export default function ProductPanel({ product, initialVariant }: Props) {
         <div>
           <div className="flex items-center justify-between mb-3">
             <p
-              className={`text-[10px] tracking-[0.25em] uppercase ${sizeError ? "text-[#D4A853]" : "text-[#7A7468]"}`}
+              className={`text-[10px] tracking-[0.25em] uppercase ${
+                sizeError ? "text-[#D4A853]" : "text-[#7A7468]"
+              }`}
             >
               {sizeError ? "Select a size" : "Size"}
             </p>

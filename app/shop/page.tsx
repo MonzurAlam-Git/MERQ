@@ -1,9 +1,10 @@
 // app/shop/page.tsx
 
 import CategoryFilter from "@/components/shop/CategoryFilter";
-import ShopGrid from "@/components/shop/Shopgrid";
+import ShopGrid from "@/components/shop/ShopGrid";
 
-import { PRODUCTS, type ProductCategory } from "@/lib/products";
+import { db } from "@/lib/db";
+import { formatProduct } from "@/lib/products";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -21,19 +22,22 @@ export default async function ShopPage({
 }) {
   const { category, q } = await searchParams;
 
-  let products = category
-    ? PRODUCTS.filter((p) => p.category === (category as ProductCategory))
-    : PRODUCTS;
+  // Build the where clause dynamically
+  const where: Record<string, unknown> = {};
+
+  if (category) {
+    where.category = category;
+  }
 
   if (q?.trim()) {
-    const query = q.trim().toLowerCase();
-    products = products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(query) ||
-        p.category.toLowerCase().includes(query) ||
-        p.variants.some((v) => v.toLowerCase().includes(query)),
-    );
+    where.OR = [
+      { name: { contains: q, mode: "insensitive" } },
+      { category: { contains: q, mode: "insensitive" } },
+    ];
   }
+
+  const raw = await db.product.findMany({ where, orderBy: { id: "asc" } });
+  const products = raw.map(formatProduct);
 
   const heading = q?.trim()
     ? `"${q}"`
@@ -42,7 +46,7 @@ export default async function ShopPage({
       : "Everything";
 
   return (
-    <main className="min-h-screen bg-onyx pt-24 pb-20">
+    <main className="min-h-screen bg-[#111010] pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 pb-6 border-b border-[#3A3830]">
           <h1 className="font-serif text-[#E8E4DE] text-5xl md:text-6xl">
