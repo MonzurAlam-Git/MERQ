@@ -7,6 +7,15 @@ import { Suspense } from "react";
 import NavDrawer from "./NavDrawer";
 import NavSearch from "./NavSearch";
 
+const NAV_LINKS = [
+  { label: "Shop", href: "/shop" },
+  { label: "Outerwear", href: "/shop?category=outerwear" },
+  { label: "Tailoring", href: "/shop?category=tailoring" },
+  { label: "About", href: "/about" },
+] as const;
+
+type NavLink = (typeof NAV_LINKS)[number];
+
 export default async function Navbar() {
   const session = await auth();
   return (
@@ -22,12 +31,7 @@ export default async function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {[
-              { label: "Shop", href: "/shop" },
-              { label: "Outerwear", href: "/shop?category=outerwear" },
-              { label: "Tailoring", href: "/shop?category=tailoring" },
-              { label: "About", href: "/about" },
-            ].map(({ label, href }) => (
+            {NAV_LINKS.map(({ label, href }: NavLink) => (
               <Link
                 key={label}
                 href={href}
@@ -52,7 +56,7 @@ export default async function Navbar() {
               >
                 <button
                   type="submit"
-                  className="text-[11px] tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
+                  className="inline-flex h-8 items-center text-[11px] leading-none tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
                 >
                   Sign out
                 </button>
@@ -60,7 +64,7 @@ export default async function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="text-[11px] tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
+                className="inline-flex h-8 items-center text-[11px] leading-none tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
               >
                 Sign in
               </Link>

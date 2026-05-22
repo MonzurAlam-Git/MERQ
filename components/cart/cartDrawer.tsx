@@ -1,7 +1,7 @@
 // components/cart/CartDrawer.tsx
 "use client";
 
-import { useCartStore } from "@/lib/store/cartStore";
+import { type CartItem, useCartStore } from "@/lib/store/cartStore";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -38,7 +38,10 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
           <span className="text-[11px] tracking-[0.3em] uppercase text-[#E8E4DE]">
             Cart{" "}
             {items.length > 0 &&
-              `(${items.reduce((s, i) => s + i.quantity, 0)})`}
+              `(${items.reduce(
+                (s: number, i: CartItem) => s + i.quantity,
+                0,
+              )})`}
           </span>
           <button
             onClick={onClose}
@@ -77,7 +80,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
             {/* Item list — takes all remaining space, scrolls internally */}
             <div className="flex-1 overflow-y-auto min-h-0">
               <ul className="divide-y divide-[#1E1C18]">
-                {items.map((item) => (
+                {items.map((item: CartItem) => (
                   <li
                     key={`${item.productId}-${item.variant}-${item.size}`}
                     className="flex gap-4 px-6 py-5"

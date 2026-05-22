@@ -9,12 +9,10 @@ const NAV_LINKS = [
   { label: "Outerwear", href: "/shop?category=outerwear" },
   { label: "Tailoring", href: "/shop?category=tailoring" },
   { label: "About", href: "/about" },
+  { label: "Wishlist", href: "/wishlist" },
 ] as const;
 
-type NavLink = {
-  readonly label: string;
-  readonly href: string;
-};
+type NavLink = (typeof NAV_LINKS)[number];
 
 export default function NavDrawer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -86,7 +84,7 @@ export default function NavDrawer() {
 
         {/* Nav links */}
         <nav className="flex flex-col px-6 pt-8 gap-6 flex-1">
-          {NAV_LINKS.map(({ label, href }) => (
+          {NAV_LINKS.map(({ label, href }: NavLink) => (
             <Link
               key={label}
               href={href}

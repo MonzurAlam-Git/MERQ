@@ -1,7 +1,7 @@
 // components/shop/ProductCard.tsx
 "use client";
 
-import { DbProduct, VARIANT_COLORS } from "@/lib/products";
+import { type DbProduct, VARIANT_COLORS } from "@/lib/products";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -13,7 +13,9 @@ export default function ProductCard({
   product: DbProduct;
   priority?: boolean;
 }) {
-  const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+  const [selectedVariant, setSelectedVariant] = useState<string>(
+    product.variants[0],
+  );
 
   const imageSrc =
     product.images[selectedVariant] ?? product.images[product.variants[0]];
@@ -74,7 +76,7 @@ export default function ProductCard({
 
       {/* Swatches — outside Link to prevent navigation on swatch click */}
       <div className="flex items-center gap-1.5">
-        {product.variants.map((v) => {
+        {product.variants.map((v: string) => {
           const isActive = v === selectedVariant;
           return (
             <button

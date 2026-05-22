@@ -12,6 +12,7 @@ const CATEGORIES = [
   { label: "Dresses", value: "dresses" },
   { label: "Accessories", value: "accessories" },
 ] as const;
+type CategoryOption = (typeof CATEGORIES)[number];
 // ↑ "as const" locks the array so TypeScript knows the exact string values
 //   instead of widening them to just `string`. Without it, `value` would
 //   just be type string and you'd lose autocomplete + type-safety.
@@ -34,7 +35,7 @@ export default function CategoryFilter() {
 
   return (
     <nav className="flex gap-6 overflow-x-auto scrollbar-none">
-      {CATEGORIES.map(({ label, value }) => {
+      {CATEGORIES.map(({ label, value }: CategoryOption) => {
         const isActive = active === value;
         return (
           <button

@@ -4,7 +4,7 @@ import CategoryFilter from "@/components/shop/CategoryFilter";
 import ShopGrid from "@/components/shop/ShopGrid";
 
 import { db } from "@/lib/db";
-import { formatProduct } from "@/lib/products";
+import { formatProduct, type DbProduct } from "@/lib/products";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -21,26 +21,30 @@ export default async function ShopPage({
   searchParams: SearchParams;
 }) {
   const { category, q } = await searchParams;
+  const query = q?.trim();
 
   // Build the where clause dynamically
-  const where: Record<string, unknown> = {};
+  const raw = await db.product.findMany({
+    where: {
+      ...(category ? { category } : {}),
+      ...(query
+        ? {
+            OR: [
+              { name: { contains: query, mode: "insensitive" as const } },
+              { category: { contains: query, mode: "insensitive" as const } },
+            ],
+          }
+        : {}),
+    },
+    orderBy: { id: "asc" },
+  });
+  type RawProduct = (typeof raw)[number];
+  const products: DbProduct[] = raw.map((product: RawProduct) =>
+    formatProduct(product),
+  );
 
-  if (category) {
-    where.category = category;
-  }
-
-  if (q?.trim()) {
-    where.OR = [
-      { name: { contains: q, mode: "insensitive" } },
-      { category: { contains: q, mode: "insensitive" } },
-    ];
-  }
-
-  const raw = await db.product.findMany({ where, orderBy: { id: "asc" } });
-  const products = raw.map(formatProduct);
-
-  const heading = q?.trim()
-    ? `"${q}"`
+  const heading = query
+    ? `"${query}"`
     : category
       ? category.charAt(0).toUpperCase() + category.slice(1)
       : "Everything";

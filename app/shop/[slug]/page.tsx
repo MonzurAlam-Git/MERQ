@@ -1,18 +1,26 @@
 // app/shop/[slug]/page.tsx
 
+import { auth } from "@/auth";
 import ProductPanel from "@/components/shop/ProductPanel";
 import { db } from "@/lib/db";
-import { formatProduct } from "@/lib/products";
+import { formatProduct, type DbProduct } from "@/lib/products";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Params = Promise<{ slug: string }>;
-type SearchParams = Promise<{ variant?: string }>;
+type SearchParams = Promise<{
+  category?: string;
+  q?: string;
+  variant?: string;
+}>;
 
-export async function generateStaticParams() {
-  const products = await db.product.findMany({ select: { slug: true } });
-  return products.map((p) => ({ slug: p.slug }));
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
+  const products: { slug: string }[] = await db.product.findMany({
+    select: { slug: true },
+  });
+  type StaticProduct = (typeof products)[number];
+  return products.map((p: StaticProduct) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -38,15 +46,22 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
   const { variant } = await searchParams;
+  const session = await auth();
 
   const raw = await db.product.findUnique({ where: { slug } });
   if (!raw) notFound();
 
-  const product = formatProduct(raw);
+  const product: DbProduct = formatProduct(raw);
 
-  const initialVariant = product.variants.includes(variant ?? "")
-    ? variant!
+  const initialVariant = variant && product.variants.includes(variant)
+    ? variant
     : product.variants[0];
+
+  const isWishlisted = session?.user?.id
+    ? !!(await db.wishlist.findFirst({
+        where: { userId: session.user.id, productId: product.id },
+      }))
+    : false;
 
   return (
     <main className="min-h-screen bg-[#111010] pt-20">
@@ -67,7 +82,11 @@ export default async function ProductPage({
         </nav>
 
         <div className="pb-24">
-          <ProductPanel product={product} initialVariant={initialVariant} />
+          <ProductPanel
+            product={product}
+            initialVariant={initialVariant}
+            isWishlisted={isWishlisted}
+          />
         </div>
       </div>
     </main>

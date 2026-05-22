@@ -36,10 +36,10 @@ export const useCartStore = create<CartStore>()(
     (set, get) => ({
       items: [],
 
-      addItem: (newItem) =>
-        set((state) => {
+      addItem: (newItem: Omit<CartItem, "quantity">) =>
+        set((state: CartStore) => {
           const existing = state.items.find(
-            (i) =>
+            (i: CartItem) =>
               i.productId === newItem.productId &&
               i.variant === newItem.variant &&
               i.size === newItem.size,
@@ -47,7 +47,7 @@ export const useCartStore = create<CartStore>()(
           if (existing) {
             // Same product + variant + size → increment quantity
             return {
-              items: state.items.map((i) =>
+              items: state.items.map((i: CartItem) =>
                 i.productId === newItem.productId &&
                 i.variant === newItem.variant &&
                 i.size === newItem.size
@@ -60,10 +60,10 @@ export const useCartStore = create<CartStore>()(
           return { items: [...state.items, { ...newItem, quantity: 1 }] };
         }),
 
-      removeItem: (productId, variant, size) =>
-        set((state) => ({
+      removeItem: (productId: number, variant: string, size: string) =>
+        set((state: CartStore) => ({
           items: state.items.filter(
-            (i) =>
+            (i: CartItem) =>
               !(
                 i.productId === productId &&
                 i.variant === variant &&
@@ -72,20 +72,25 @@ export const useCartStore = create<CartStore>()(
           ),
         })),
 
-      updateQuantity: (productId, variant, size, quantity) =>
-        set((state) => ({
+      updateQuantity: (
+        productId: number,
+        variant: string,
+        size: string,
+        quantity: number,
+      ) =>
+        set((state: CartStore) => ({
           items:
             quantity <= 0
               ? // quantity hits 0 → remove the item entirely
                 state.items.filter(
-                  (i) =>
+                  (i: CartItem) =>
                     !(
                       i.productId === productId &&
                       i.variant === variant &&
                       i.size === size
                     ),
                 )
-              : state.items.map((i) =>
+              : state.items.map((i: CartItem) =>
                   i.productId === productId &&
                   i.variant === variant &&
                   i.size === size
@@ -97,9 +102,16 @@ export const useCartStore = create<CartStore>()(
       clearCart: () => set({ items: [] }),
 
       // get() reads current state — used inside derived functions
-      totalItems: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
+      totalItems: () =>
+        get().items.reduce(
+          (sum: number, i: CartItem) => sum + i.quantity,
+          0,
+        ),
       totalPrice: () =>
-        get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+        get().items.reduce(
+          (sum: number, i: CartItem) => sum + i.price * i.quantity,
+          0,
+        ),
     }),
     { name: "merq-cart" }, // localStorage key
   ),

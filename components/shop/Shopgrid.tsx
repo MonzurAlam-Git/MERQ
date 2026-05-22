@@ -1,8 +1,8 @@
 // components/shop/ShopGrid.tsx
 "use client";
 
-import { DbProduct } from "@/lib/products";
-import ProductCard from "./product-card";
+import type { DbProduct } from "@/lib/products";
+import ProductCard from "./ProductCard";
 
 export default function ShopGrid({ products }: { products: DbProduct[] }) {
   return (
@@ -13,7 +13,7 @@ export default function ShopGrid({ products }: { products: DbProduct[] }) {
 
       {products.length > 0 ? (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12">
-          {products.map((product, index) => (
+          {products.map((product: DbProduct, index: number) => (
             <ProductCard
               key={product.id}
               product={product}

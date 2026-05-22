@@ -12,7 +12,7 @@ export default function ShopLoading() {
 
         {/* Filter skeleton */}
         <div className="flex gap-6 mb-10">
-          {Array.from({ length: 6 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_: unknown, i: number) => (
             <div
               key={i}
               className="h-3 w-16 bg-[#1E1C18] rounded animate-pulse"
@@ -22,7 +22,7 @@ export default function ShopLoading() {
 
         {/* Grid skeleton */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 8 }).map((_: unknown, i: number) => (
             <div key={i}>
               <div className="aspect-[3/4] bg-[#1E1C18] rounded animate-pulse mb-4" />
               <div className="h-4 w-3/4 bg-[#1E1C18] rounded animate-pulse mb-2" />

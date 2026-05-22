@@ -1,9 +1,16 @@
 // components/home/HomeSearch.tsx
 "use client";
 
-import { PRODUCTS, VARIANT_COLORS } from "@/lib/products";
+import { PRODUCTS, VARIANT_COLORS, type DbProduct } from "@/lib/products";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+type SearchProduct = Pick<
+  DbProduct,
+  "id" | "slug" | "name" | "category" | "variants" | "priceFormatted"
+>;
+
+const SEARCH_PRODUCTS: SearchProduct[] = PRODUCTS;
 
 export default function HomeSearch() {
   const [input, setInput] = useState("");
@@ -17,14 +24,14 @@ export default function HomeSearch() {
   }, [input]);
 
   // Filter products client-side
-  const results = useMemo(() => {
+  const results = useMemo<SearchProduct[]>(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [];
-    return PRODUCTS.filter(
-      (p) =>
+    return SEARCH_PRODUCTS.filter(
+      (p: SearchProduct) =>
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
-        p.variants.some((v) => v.toLowerCase().includes(q)),
+        p.variants.some((v: string) => v.toLowerCase().includes(q)),
     );
   }, [query]);
 
@@ -84,7 +91,7 @@ export default function HomeSearch() {
           {/* Product rows */}
           {hasResults && (
             <ul className="divide-y divide-[#1E1C18]">
-              {results.map((product) => (
+              {results.map((product: SearchProduct) => (
                 <li key={product.id}>
                   <Link
                     href={`/shop/${product.slug}`}
@@ -103,7 +110,7 @@ export default function HomeSearch() {
                     {/* Right: swatches + price */}
                     <div className="flex items-center gap-4 shrink-0">
                       <div className="hidden sm:flex items-center gap-1.5">
-                        {product.variants.map((v) => (
+                        {product.variants.map((v: string) => (
                           <span
                             key={v}
                             title={v}

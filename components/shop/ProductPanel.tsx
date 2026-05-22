@@ -1,17 +1,23 @@
 // components/shop/ProductPanel.tsx
 "use client";
 
-import { DbProduct, VARIANT_COLORS } from "@/lib/products";
+import { type DbProduct, VARIANT_COLORS } from "@/lib/products";
 import { useCartStore } from "@/lib/store/cartStore";
 import { useState } from "react";
 import ProductGallery from "./ProductGallery";
+import WishlistButton from "./WishlistButton";
 
 type Props = {
   product: DbProduct;
   initialVariant: string;
+  isWishlisted: boolean;
 };
 
-export default function ProductPanel({ product, initialVariant }: Props) {
+export default function ProductPanel({
+  product,
+  initialVariant,
+  isWishlisted,
+}: Props) {
   const [selectedVariant, setSelectedVariant] = useState(initialVariant);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [sizeError, setSizeError] = useState(false);
@@ -57,9 +63,18 @@ export default function ProductPanel({ product, initialVariant }: Props) {
               {product.badge}
             </span>
           )}
-          <h1 className="font-serif text-[#E8E4DE] text-3xl md:text-4xl leading-tight mb-3">
-            {product.name}
-          </h1>
+
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="font-serif text-[#E8E4DE] text-3xl md:text-4xl leading-tight mb-3">
+              {product.name}
+            </h1>
+            <WishlistButton
+              productId={product.id}
+              productSlug={product.slug}
+              isWishlisted={isWishlisted}
+            />
+          </div>
+
           <p className="text-[#7A7468] text-lg">{product.priceFormatted}</p>
         </div>
 
@@ -71,7 +86,7 @@ export default function ProductPanel({ product, initialVariant }: Props) {
             Color — <span className="text-[#E8E4DE]">{selectedVariant}</span>
           </p>
           <div className="flex gap-2">
-            {product.variants.map((v) => (
+            {product.variants.map((v: string) => (
               <button
                 key={v}
                 title={v}
@@ -104,7 +119,7 @@ export default function ProductPanel({ product, initialVariant }: Props) {
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
-            {product.sizes.map((size) => (
+            {product.sizes.map((size: string) => (
               <button
                 key={size}
                 onClick={() => {
@@ -135,7 +150,7 @@ export default function ProductPanel({ product, initialVariant }: Props) {
             "Final sale. No returns.",
             "Ships in 5–7 business days.",
             "Duty and import taxes calculated at checkout.",
-          ].map((line) => (
+          ].map((line: string) => (
             <p
               key={line}
               className="text-[11px] tracking-[0.1em] text-[#3A3830]"

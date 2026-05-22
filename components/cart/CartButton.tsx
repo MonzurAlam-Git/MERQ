@@ -19,7 +19,7 @@ export default function CartButton() {
       <button
         onClick={() => setIsOpen(true)}
         aria-label="Open cart"
-        className="text-[11px] tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
+        className="inline-flex h-8 items-center text-[11px] leading-none tracking-[0.2em] uppercase text-[#7A7468] hover:text-[#E8E4DE] transition-colors duration-200"
       >
         Cart {hasMounted && totalItems > 0 && `(${totalItems})`}
       </button>

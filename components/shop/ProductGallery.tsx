@@ -17,14 +17,14 @@ export default function ProductGallery({
   onVariantChange,
 }: Props) {
   // Object.keys gets all the keys from an object called images and stores them in an array called variants
-  const variants = Object.keys(images);
+  const variants: string[] = Object.keys(images);
   const activeSrc = images[activeVariant] ?? images[variants[0]];
 
   return (
     <div className="flex gap-4">
       {/* Thumbnail strip — one per variant */}
       <div className="hidden md:flex flex-col gap-2 w-16 shrink-0">
-        {variants.map((variant) => (
+        {variants.map((variant: string) => (
           <button
             key={variant}
             onClick={() => onVariantChange(variant)}
@@ -60,7 +60,7 @@ export default function ProductGallery({
 
           {/* Mobile dot indicators */}
           <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 md:hidden">
-            {variants.map((variant) => (
+            {variants.map((variant: string) => (
               <button
                 key={variant}
                 onClick={() => onVariantChange(variant)}

@@ -1,9 +1,11 @@
 // app/page.tsx
 
-import ProductCard from "@/components/shop/product-card";
+import ProductCard from "@/components/shop/ProductCard";
 import { db } from "@/lib/db";
-import { formatProduct } from "@/lib/products";
+
 import Link from "next/link";
+
+import { formatProduct, type DbProduct } from "@/lib/products";
 
 export default async function HomePage() {
   const FEATURED_IDS = [1, 5, 9, 18];
@@ -12,7 +14,10 @@ export default async function HomePage() {
     where: { id: { in: FEATURED_IDS } },
     orderBy: { id: "asc" },
   });
-  const featured = raw.map(formatProduct);
+  type RawProduct = (typeof raw)[number];
+  const featured: DbProduct[] = raw.map((product: RawProduct) =>
+    formatProduct(product),
+  );
 
   return (
     <main className="bg-[#111010]">
@@ -93,7 +98,7 @@ export default async function HomePage() {
 
         {/* Product grid — 4 featured */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12">
-          {featured.map((product) => (
+          {featured.map((product: DbProduct) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
