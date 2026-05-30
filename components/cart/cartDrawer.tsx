@@ -2,8 +2,11 @@
 "use client";
 
 import { type CartItem, useCartStore } from "@/lib/store/cartStore";
+
+import { createCheckoutSession } from "@/lib/actions/checkout";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -14,6 +17,25 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
   const { items, removeItem, updateQuantity, totalPrice, clearCart } =
     useCartStore();
   const total = totalPrice();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleCheckout() {
+    setIsLoading(true);
+    await createCheckoutSession(
+      items.map((item: CartItem) => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+        variant: item.variant,
+        size: item.size,
+        productId: item.productId,
+        slug: item.slug,
+      })),
+    );
+    setIsLoading(false);
+  }
 
   return (
     <>
@@ -198,8 +220,12 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
               <p className="text-[#3A3830] text-[10px] tracking-[0.15em]">
                 Shipping and taxes calculated at checkout.
               </p>
-              <button className="w-full bg-[#E8E4DE] text-[#111010] py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200">
-                Checkout
+              <button
+                onClick={handleCheckout}
+                disabled={isLoading}
+                className="w-full bg-[#E8E4DE] text-[#111010] py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200 disabled:opacity-50"
+              >
+                {isLoading ? "Redirecting..." : "Checkout"}
               </button>
               <button
                 onClick={clearCart}
