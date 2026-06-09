@@ -3,6 +3,7 @@
 
 import { auth } from "@/auth";
 import { stripe } from "@/lib/stripe";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function createCheckoutSession(
@@ -19,6 +20,17 @@ export async function createCheckoutSession(
 ) {
   const session = await auth();
   if (!session?.user?.id) redirect("/login");
+
+  // Derive base URL from request headers for production compatibility
+  const headersList = await headers();
+  const origin =
+    headersList.get("origin") ??
+    (headersList.get("x-forwarded-proto") === "https" &&
+    headersList.get("x-forwarded-host")
+      ? `https://${headersList.get("x-forwarded-host")}`
+      : undefined) ??
+    process.env.NEXTAUTH_URL ??
+    "http://localhost:3000";
 
   const checkoutSession = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
@@ -48,8 +60,8 @@ export async function createCheckoutSession(
         })),
       ),
     },
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/shop`,
+    success_url: `${origin}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/shop`,
   });
 
   if (!checkoutSession.url)

@@ -1,0 +1,11 @@
+1. After a successful payment on the deployed production link, the application redirects to `http://localhost:3000/order-confirmation` instead of the production domain, indicating the post-payment callback URL is hardcoded to the local development server.
+
+5.After adding to cart, there should be an indication to user that items have been added to cart
+_ Either Adding to cart option should be disabled for that specific variation
+_ A notification alert system
+
+6.After login by google user redirected to error 404 page
+
+7. telegram bot has stopped workign after order confirmation
+
+8. No login/Logout option in mobile devices

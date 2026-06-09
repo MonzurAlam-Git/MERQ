@@ -4,9 +4,12 @@
 import { type CartItem, useCartStore } from "@/lib/store/cartStore";
 
 import { createCheckoutSession } from "@/lib/actions/checkout";
+import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -14,27 +17,45 @@ type Props = {
 };
 
 export default function CartDrawer({ isOpen, onClose }: Props) {
+  // inside the component:
+  const router = useRouter();
+  const pathname = usePathname();
+  const closeCart = useCartStore((s) => s.closeCart); // make sure this action exists
+
   const { items, removeItem, updateQuantity, totalPrice, clearCart } =
     useCartStore();
-  const total = totalPrice();
 
+  const total = totalPrice();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Close cart when pathname changes (prevents overlaying login page)
+  useEffect(() => {
+    onClose();
+  }, [pathname]);
+
   async function handleCheckout() {
+    closeCart();
     setIsLoading(true);
-    await createCheckoutSession(
-      items.map((item: CartItem) => ({
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        image: item.image,
-        variant: item.variant,
-        size: item.size,
-        productId: item.productId,
-        slug: item.slug,
-      })),
-    );
+    try {
+      await createCheckoutSession(
+        items.map((item: CartItem) => ({
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image,
+          variant: item.variant,
+          size: item.size,
+          productId: item.productId,
+          slug: item.slug,
+        })),
+      );
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      setIsLoading(false);
+      return; // don't redirect on failure
+    }
     setIsLoading(false);
+    router.push("/checkout");
   }
 
   return (
@@ -176,7 +197,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
 
                         {/* Price */}
                         <span className="text-[#E8E4DE] text-sm">
-                          ${(item.price * item.quantity).toLocaleString()}
+                          {formatPrice(item.price * item.quantity)}
                         </span>
                       </div>
                     </div>
@@ -214,12 +235,17 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
                   Subtotal
                 </span>
                 <span className="font-serif text-[#E8E4DE] text-xl">
-                  ${total.toLocaleString()}
+                  {formatPrice(total)}
                 </span>
               </div>
               <p className="text-[#3A3830] text-[10px] tracking-[0.15em]">
                 Shipping and taxes calculated at checkout.
               </p>
+              {process.env.NODE_ENV === "development" && (
+                <p className="text-[#3A3830] text-[10px] tracking-[0.15em] text-center">
+                  Test card: 4242 4242 4242 4242
+                </p>
+              )}
               <button
                 onClick={handleCheckout}
                 disabled={isLoading}

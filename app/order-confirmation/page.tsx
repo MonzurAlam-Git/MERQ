@@ -1,5 +1,7 @@
 // app/order-confirmation/page.tsx
 
+import { CartClearer } from "@/components/cart/CartClearer";
+import { formatPrice } from "@/lib/formatPrice";
 import { stripe } from "@/lib/stripe";
 import Link from "next/link";
 
@@ -23,10 +25,11 @@ export default async function OrderConfirmationPage({
   }
 
   const session = await stripe.checkout.sessions.retrieve(session_id);
-  const total = ((session.amount_total ?? 0) / 100).toLocaleString();
+  const total = formatPrice(session.amount_total ?? 0);
 
   return (
     <main className="min-h-screen bg-[#111010] flex items-center justify-center px-4">
+      <CartClearer />
       <div className="max-w-md w-full text-center space-y-8">
         <div>
           <p className="text-[#D4A853] text-[10px] tracking-[0.4em] uppercase mb-4">
@@ -46,7 +49,7 @@ export default async function OrderConfirmationPage({
             <span className="text-[11px] tracking-[0.2em] uppercase text-[#7A7468]">
               Total paid
             </span>
-            <span className="font-serif text-[#E8E4DE] text-2xl">${total}</span>
+            <span className="font-serif text-[#E8E4DE] text-2xl">{total}</span>
           </div>
         </div>
 
