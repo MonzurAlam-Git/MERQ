@@ -125,7 +125,7 @@ merq/
 │   ├── cart/                # CartDrawer, CartItem
 │   └── chat/                # AI assistant
 ├── lib/
-│   ├── prisma.ts
+│   ├── db.ts
 │   ├── stripe.ts
 │   └── cloudinary.ts
 ├── store/                   # Zustand — cart, wishlist

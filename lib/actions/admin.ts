@@ -23,7 +23,7 @@ export async function updateProduct({
   price,
   badge,
 }: {
-  id: string;
+  id: number;
   name: string;
   price: number;
   badge: string | null;
