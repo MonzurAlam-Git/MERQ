@@ -5,7 +5,12 @@ export async function sendTelegramNotification(message: string) {
   const chatId = process.env.TELEGRAM_CHAT_ID;
 
   if (!token || !chatId) {
-    console.error("❌ Telegram credentials missing - BOT_TOKEN:", !!token, "CHAT_ID:", !!chatId);
+    console.error(
+      "❌ Telegram credentials missing - BOT_TOKEN:",
+      !!token,
+      "CHAT_ID:",
+      !!chatId,
+    );
     return;
   }
 
@@ -15,16 +20,19 @@ export async function sendTelegramNotification(message: string) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-    const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text: message,
-        parse_mode: "HTML",
-      }),
-      signal: controller.signal,
-    });
+    const response = await fetch(
+      `https://api.telegram.org/bot${token}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: "HTML",
+        }),
+        signal: controller.signal,
+      },
+    );
 
     clearTimeout(timeoutId);
 
@@ -35,8 +43,14 @@ export async function sendTelegramNotification(message: string) {
     }
 
     const result = await response.json();
-    console.log("✅ Telegram notification sent successfully. Message ID:", result.result?.message_id);
+    console.log(
+      "✅ Telegram notification sent successfully. Message ID:",
+      result.result?.message_id,
+    );
   } catch (error) {
-    console.error("❌ Failed to send Telegram notification:", error instanceof Error ? error.message : error);
+    console.error(
+      "❌ Failed to send Telegram notification:",
+      error instanceof Error ? error.message : error,
+    );
   }
 }

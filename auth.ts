@@ -15,19 +15,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     session({ session, user }) {
-      // Add user ID to the session so you can access it in Server Components
       session.user.id = user.id;
+      session.user.role = user.role;
       return session;
-    },
-    redirect({ url, baseUrl }) {
-      // Allow relative URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Allow same origin
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
     },
   },
   pages: {
-    signIn: "/login", // custom login page — we'll build this next
+    signIn: "/login",
   },
 });

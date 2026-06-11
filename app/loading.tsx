@@ -2,7 +2,7 @@
 
 export default function Loading() {
   return (
-    <main className="min-h-screen bg-[#111010] flex items-center justify-center">
+    <main className="min-h-screen bg-onyx flex items-center justify-center">
       <div className="flex flex-col items-center gap-6">
         <p className="font-serif text-[#E8E4DE] text-3xl tracking-[0.4em] uppercase animate-pulse">
           MERQ

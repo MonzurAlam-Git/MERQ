@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main className="relative min-h-screen bg-[#111010] flex items-center justify-center px-6 md:px-12 overflow-hidden">
+    <main className="relative min-h-screen bg-onyx flex items-center justify-center px-6 md:px-12 overflow-hidden">
       {/* Monumental background watermark */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
         <span className="text-[#151413] text-[55vw] md:text-[38vw] font-sans font-medium leading-none tracking-tighter">
@@ -34,7 +34,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-start gap-4">
           <Link
             href="/shop"
-            className="text-[11px] tracking-[0.3em] uppercase text-[#111010] bg-[#E8E4DE] px-10 py-3.5 hover:bg-white transition-colors duration-300"
+            className="text-[11px] tracking-[0.3em] uppercase text-onyx bg-[#E8E4DE] px-10 py-3.5 hover:bg-white transition-colors duration-300"
           >
             Browse the collection
           </Link>

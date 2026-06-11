@@ -56,7 +56,7 @@ export default function ProductPanel({
             <span
               className={`inline-block text-[10px] tracking-[0.2em] uppercase mb-3 px-2 py-[3px] ${
                 product.badge === "new"
-                  ? "bg-[#D4A853] text-[#111010]"
+                  ? "bg-[#D4A853] text-onyx"
                   : "border border-[#3A3830] text-[#7A7468]"
               }`}
             >
@@ -93,7 +93,7 @@ export default function ProductPanel({
                 aria-label={`Select ${v}`}
                 aria-pressed={v === selectedVariant}
                 onClick={() => setSelectedVariant(v)}
-                className={`w-7 h-7 rounded-full ring-offset-2 ring-offset-[#111010] transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A853] ${
+                className={`w-7 h-7 rounded-full ring-offset-2 ring-offset-onyx transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A853] ${
                   v === selectedVariant
                     ? "ring-2 ring-[#D4A853]"
                     : "ring-1 ring-[#3A3830] hover:ring-[#7A7468]"
@@ -140,7 +140,7 @@ export default function ProductPanel({
 
         <button
           onClick={handleAddToCart}
-          className="w-full bg-[#E8E4DE] text-[#111010] py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200"
+          className="w-full bg-[#E8E4DE] text-onyx py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200"
         >
           Add to Cart
         </button>

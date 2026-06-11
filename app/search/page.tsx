@@ -1,11 +1,11 @@
 // app/search/page.tsx
 
+import ProductCard from "@/components/shop/ProductCard";
 import { db } from "@/lib/db";
 import { formatProduct, type DbProduct } from "@/lib/products";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
-import ProductCard from "@/components/shop/ProductCard";
-import type { Metadata } from "next";
 
 type SearchParams = Promise<{ category?: string; q?: string }>;
 
@@ -50,7 +50,7 @@ export default async function SearchPage({
     : [];
 
   return (
-    <main className="min-h-screen bg-[#111010] pt-24 pb-20">
+    <main className="min-h-screen bg-onyx pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12">
           <p className="text-[#7A7468] text-[11px] tracking-[0.3em] uppercase mb-2">
@@ -66,7 +66,10 @@ export default async function SearchPage({
             <p className="font-serif text-[#E8E4DE] text-2xl">Nothing found.</p>
             <p className="text-[#7A7468] text-[11px] tracking-[0.2em] uppercase">
               Try a different search term or{" "}
-              <Link href="/shop" className="hover:text-[#E8E4DE] transition-colors">
+              <Link
+                href="/shop"
+                className="hover:text-[#E8E4DE] transition-colors"
+              >
                 browse the collection
               </Link>
               .

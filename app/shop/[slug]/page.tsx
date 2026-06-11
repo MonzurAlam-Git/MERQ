@@ -53,9 +53,10 @@ export default async function ProductPage({
 
   const product: DbProduct = formatProduct(raw);
 
-  const initialVariant = variant && product.variants.includes(variant)
-    ? variant
-    : product.variants[0];
+  const initialVariant =
+    variant && product.variants.includes(variant)
+      ? variant
+      : product.variants[0];
 
   const isWishlisted = session?.user?.id
     ? !!(await db.wishlist.findFirst({
@@ -64,7 +65,7 @@ export default async function ProductPage({
     : false;
 
   return (
-    <main className="min-h-screen bg-[#111010] pt-20">
+    <main className="min-h-screen bg-onyx pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav className="py-6 flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase text-[#7A7468]">
           <Link href="/shop" className="hover:text-[#E8E4DE] transition-colors">

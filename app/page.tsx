@@ -20,7 +20,7 @@ export default async function HomePage() {
   );
 
   return (
-    <main className="bg-[#111010]">
+    <main className="bg-onyx">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-8 pt-32 pb-16">
         {/* Top line */}

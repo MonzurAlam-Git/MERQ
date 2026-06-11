@@ -50,7 +50,7 @@ export default async function ShopPage({
       : "Everything";
 
   return (
-    <main className="min-h-screen bg-[#111010] pt-24 pb-20">
+    <main className="min-h-screen bg-onyx pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 pb-6 border-b border-[#3A3830]">
           <h1 className="font-serif text-[#E8E4DE] text-5xl md:text-6xl">

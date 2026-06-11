@@ -24,7 +24,7 @@ export default async function WishlistPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#111010] pt-24 pb-20">
+    <main className="min-h-screen bg-onyx pt-24 pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10 pb-6 border-b border-[#3A3830]">
           <p className="text-[#7A7468] text-[11px] tracking-[0.3em] uppercase mb-2">
@@ -40,7 +40,7 @@ export default async function WishlistPage() {
             <p className="font-serif text-[#E8E4DE] text-2xl">Nothing saved.</p>
             <Link
               href="/shop"
-              className="text-[11px] tracking-[0.3em] uppercase text-[#111010] bg-[#E8E4DE] px-8 py-3 hover:bg-white transition-colors"
+              className="text-[11px] tracking-[0.3em] uppercase text-onyx bg-[#E8E4DE] px-8 py-3 hover:bg-white transition-colors"
             >
               Browse the collection
             </Link>

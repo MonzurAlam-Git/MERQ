@@ -7,9 +7,8 @@ import { createCheckoutSession } from "@/lib/actions/checkout";
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +18,6 @@ type Props = {
 export default function CartDrawer({ isOpen, onClose }: Props) {
   // inside the component:
   const router = useRouter();
-  const pathname = usePathname();
   const closeCart = useCartStore((s) => s.closeCart); // make sure this action exists
 
   const { items, removeItem, updateQuantity, totalPrice, clearCart } =
@@ -27,11 +25,6 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
 
   const total = totalPrice();
   const [isLoading, setIsLoading] = useState(false);
-
-  // Close cart when pathname changes (prevents overlaying login page)
-  useEffect(() => {
-    onClose();
-  }, [pathname]);
 
   async function handleCheckout() {
     closeCart();
@@ -64,7 +57,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
       <div
         onClick={onClose}
         aria-hidden="true"
-        className={`fixed inset-0 z-[50] bg-black/60 transition-opacity duration-300 ${
+        className={`fixed inset-0 z-50 bg-black/60 transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
       />
@@ -72,7 +65,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
       {/* Drawer */}
       <div
         aria-label="Shopping cart"
-        className={`fixed top-0 right-0 z-[60] h-dvh w-full md:w-[420px] bg-[#111010] border-l border-[#1E1C18] transition-transform duration-300 ease-in-out flex flex-col ${
+        className={`fixed top-0 right-0 z-[60] h-dvh w-full md:w-[420px] bg-onyx border-l border-[#1E1C18] transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -110,7 +103,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
             </p>
             <button
               onClick={onClose}
-              className="text-[11px] tracking-[0.3em] uppercase text-[#111010] bg-[#E8E4DE] px-8 py-3 hover:bg-white transition-colors duration-200"
+              className="text-[11px] tracking-[0.3em] uppercase text-onyx bg-[#E8E4DE] px-8 py-3 hover:bg-white transition-colors duration-200"
             >
               Browse the collection
             </button>
@@ -249,7 +242,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
               <button
                 onClick={handleCheckout}
                 disabled={isLoading}
-                className="w-full bg-[#E8E4DE] text-[#111010] py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200 disabled:opacity-50"
+                className="w-full bg-[#E8E4DE] text-onyx py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200 disabled:opacity-50"
               >
                 {isLoading ? "Redirecting..." : "Checkout"}
               </button>

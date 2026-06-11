@@ -1,4 +1,4 @@
-// prisma.config.ts
+// db.config.ts
 
 import { defineConfig } from "prisma/config";
 

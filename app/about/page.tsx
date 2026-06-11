@@ -6,7 +6,7 @@ export default async function AboutPage() {
   // app/shop/page.tsx — add this at the top of the function body
 
   return (
-    <main className="bg-[#111010] text-[#E8E4DE]">
+    <main className="bg-onyx text-[#E8E4DE]">
       {/* Hero */}
       <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end px-6 md:px-12 pb-16 md:pb-24">
         <div className="max-w-4xl">
@@ -140,7 +140,7 @@ export default async function AboutPage() {
 
           <Link
             href="/shop"
-            className="shrink-0 text-[11px] tracking-[0.3em] uppercase text-[#111010] bg-[#E8E4DE] px-10 py-3.5 hover:bg-white transition-colors duration-300 text-center"
+            className="shrink-0 text-[11px] tracking-[0.3em] uppercase text-onyx bg-[#E8E4DE] px-10 py-3.5 hover:bg-white transition-colors duration-300 text-center"
           >
             Browse the collection
           </Link>

@@ -47,7 +47,7 @@ export default function ProductCard({
             <span
               className={`absolute top-3 left-3 z-10 text-[10px] tracking-[0.2em] uppercase px-2 py-[3px] ${
                 product.badge === "new"
-                  ? "bg-[#D4A853] text-[#111010]"
+                  ? "bg-[#D4A853] text-onyx"
                   : "border border-[#3A3830] text-[#E8E4DE]"
               }`}
             >
@@ -57,7 +57,7 @@ export default function ProductCard({
 
           {/* Hover hint */}
           <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-            <span className="block w-full text-center text-[10px] tracking-[0.25em] uppercase text-[#7A7468] bg-[#111010]/80 py-2">
+            <span className="block w-full text-center text-[10px] tracking-[0.25em] uppercase text-[#7A7468] bg-onyx/80 py-2">
               View
             </span>
           </div>
@@ -88,7 +88,7 @@ export default function ProductCard({
                 e.stopPropagation();
                 setSelectedVariant(v);
               }}
-              className={`w-4 h-4 rounded-full transition-all duration-150 ring-offset-2 ring-offset-[#111010] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A853] ${
+              className={`w-4 h-4 rounded-full transition-all duration-150 ring-offset-2 ring-offset-onyx focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A853] ${
                 isActive
                   ? "ring-2 ring-[#D4A853] scale-110"
                   : "ring-1 ring-[#3A3830] hover:ring-[#7A7468] hover:scale-105"

@@ -16,7 +16,7 @@ export default async function OrderConfirmationPage({
 
   if (!session_id) {
     return (
-      <main className="min-h-screen bg-[#111010] flex items-center justify-center">
+      <main className="min-h-screen bg-onyx flex items-center justify-center">
         <p className="text-[#7A7468] text-[11px] tracking-[0.2em] uppercase">
           No order found.
         </p>
@@ -28,7 +28,7 @@ export default async function OrderConfirmationPage({
   const total = formatPrice(session.amount_total ?? 0);
 
   return (
-    <main className="min-h-screen bg-[#111010] flex items-center justify-center px-4">
+    <main className="min-h-screen bg-onyx flex items-center justify-center px-4">
       <CartClearer />
       <div className="max-w-md w-full text-center space-y-8">
         <div>
@@ -56,7 +56,7 @@ export default async function OrderConfirmationPage({
         <div className="flex flex-col gap-3">
           <Link
             href="/orders"
-            className="w-full bg-[#E8E4DE] text-[#111010] py-3 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors text-center"
+            className="w-full bg-[#E8E4DE] text-onyx py-3 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors text-center"
           >
             View order history
           </Link>

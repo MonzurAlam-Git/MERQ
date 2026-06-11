@@ -28,7 +28,12 @@ export async function POST(req: NextRequest) {
     const items = JSON.parse(session.metadata?.items ?? "[]");
 
     if (!userId || !items.length) {
-      console.error("Stripe webhook: Missing metadata - userId:", userId, "items length:", items.length);
+      console.error(
+        "Stripe webhook: Missing metadata - userId:",
+        userId,
+        "items length:",
+        items.length,
+      );
       return NextResponse.json({ error: "Missing metadata" }, { status: 400 });
     }
 
@@ -61,17 +66,25 @@ export async function POST(req: NextRequest) {
       console.log("Order created successfully - userId:", userId);
     } catch (error) {
       console.error("Failed to create order in database:", error);
-      return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+      return NextResponse.json(
+        { error: "Failed to create order" },
+        { status: 500 },
+      );
     }
 
     // Telegram notification
     try {
-      console.log("📨 Starting Telegram notification process for order:", userId);
-      
+      console.log(
+        "📨 Starting Telegram notification process for order:",
+        userId,
+      );
+
       // Batch fetch all products at once instead of individual queries
-      const productIds = items.map((item: { productId: number }) => item.productId);
+      const productIds = items.map(
+        (item: { productId: number }) => item.productId,
+      );
       console.log("📦 Fetching products:", productIds);
-      
+
       const products = await db.product.findMany({
         where: { id: { in: productIds } },
         select: { id: true, name: true },
@@ -89,13 +102,14 @@ export async function POST(req: NextRequest) {
             size: string;
             productId: number;
           }) => {
-            const productName = productMap.get(item.productId) || "Unknown Product";
+            const productName =
+              productMap.get(item.productId) || "Unknown Product";
             return `• ${item.quantity}x <b>${productName}</b> (ProductId : ${item.productId}) — ${item.variant} / ${item.size}`;
           },
         )
         .join("\n");
 
-      const notificationMessage = 
+      const notificationMessage =
         `🛍️ <b>New Order — MERQ</b>\n\n` +
         `<b>Customer:</b> ${session.customer_email}\n` +
         `<b>Total:</b> $${((session.amount_total ?? 0) / 100).toLocaleString()}\n\n` +
