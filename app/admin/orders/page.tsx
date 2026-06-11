@@ -2,6 +2,7 @@
 import MarkShippedButton from "@/components/admin/MarkShippedButton";
 import { markOrderShipped } from "@/lib/actions/admin";
 import { db } from "@/lib/db";
+import type { OrderStatus } from "@prisma/client";
 
 type Props = {
   searchParams: Promise<{ status?: string }>;
@@ -20,7 +21,10 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
   const { status } = await searchParams;
 
   const orders = await db.order.findMany({
-    where: status && status !== "ALL" ? { status } : undefined,
+    where:
+      status && status !== "ALL"
+        ? { status: status as OrderStatus }
+        : undefined,
     include: { user: { select: { email: true } } },
     orderBy: { createdAt: "desc" },
   });
@@ -29,7 +33,6 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
     <div>
       <h1 className="font-serif text-3xl text-[#E8E4DE] mb-10">Orders</h1>
 
-      {/* Status filter */}
       <div className="flex gap-2 mb-8 flex-wrap">
         {STATUS_OPTIONS.map((s) => (
           <a
@@ -46,7 +49,6 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
         ))}
       </div>
 
-      {/* Orders table */}
       <div className="border border-[#3A3830]">
         <div className="grid grid-cols-[1fr_1.5fr_1fr_1fr_auto] text-xs tracking-widest uppercase text-[#7A7468] px-6 py-3 border-b border-[#3A3830]">
           <span>Order ID</span>
@@ -66,7 +68,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
             className="grid grid-cols-[1fr_1.5fr_1fr_1fr_auto] items-center px-6 py-4 border-b border-[#3A3830] last:border-0"
           >
             <span className="text-[#7A7468] text-xs font-mono">
-              {order.id.slice(0, 8)}…
+              {order.id.toString().slice(0, 8)}…
             </span>
             <span className="text-[#E8E4DE] text-sm">{order.user.email}</span>
             <span className="text-[#E8E4DE] text-sm">

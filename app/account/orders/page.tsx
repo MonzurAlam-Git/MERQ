@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/formatPrice";
+import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -27,6 +28,14 @@ const STATUS_COLOR: Record<OrderStatus, string> = {
   DELIVERED: "text-[#E8E4DE]",
   CANCELLED: "text-[#7A7468]",
 };
+
+type OrderWithItems = Prisma.OrderGetPayload<{
+  include: {
+    orderItems: {
+      include: { product: true };
+    };
+  };
+}>;
 
 export default async function OrdersPage() {
   const session = await auth();
@@ -63,7 +72,7 @@ export default async function OrdersPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order) => (
+          {orders.map((order: OrderWithItems) => (
             <details
               key={order.id}
               className="group border border-[#1E1C18] bg-[#111010] open:border-[#3A3830]"
@@ -108,32 +117,34 @@ export default async function OrdersPage() {
 
               {/* Expanded items */}
               <div className="border-t border-[#1E1C18] divide-y divide-[#1E1C18]">
-                {order.orderItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between px-6 py-4"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Link
-                        href={`/shop/${item.product.slug}`}
-                        className="font-serif text-[#E8E4DE] hover:text-white transition-colors"
-                      >
-                        {item.product.name}
-                      </Link>
-                      <span className="text-[#7A7468] text-[11px] tracking-[0.15em] uppercase">
-                        {item.variant} · {item.size}
-                      </span>
+                {order.orderItems.map(
+                  (item: OrderWithItems["orderItems"][number]) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between px-6 py-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Link
+                          href={`/shop/${item.product.slug}`}
+                          className="font-serif text-[#E8E4DE] hover:text-white transition-colors"
+                        >
+                          {item.product.name}
+                        </Link>
+                        <span className="text-[#7A7468] text-[11px] tracking-[0.15em] uppercase">
+                          {item.variant} · {item.size}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-6 shrink-0">
+                        <span className="text-[#7A7468] text-[11px]">
+                          ×{item.quantity}
+                        </span>
+                        <span className="text-[#E8E4DE] text-sm">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-6 shrink-0">
-                      <span className="text-[#7A7468] text-[11px]">
-                        ×{item.quantity}
-                      </span>
-                      <span className="text-[#E8E4DE] text-sm">
-                        {formatPrice(item.price * item.quantity)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ),
+                )}
               </div>
             </details>
           ))}

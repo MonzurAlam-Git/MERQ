@@ -1,5 +1,4 @@
 // app/admin/products/page.tsx
-
 import EditProductForm from "@/components/admin/EditProductForm";
 import { db } from "@/lib/db";
 

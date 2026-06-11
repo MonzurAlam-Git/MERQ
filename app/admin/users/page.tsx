@@ -1,11 +1,19 @@
 // app/admin/users/page.tsx
-
 import { auth } from "@/auth";
 import PromoteUserButton from "@/components/admin/PromoteUserButton";
 import { promoteUser } from "@/lib/actions/admin";
+import { db } from "@/lib/db";
 import type { Prisma } from "@prisma/client";
 
-import { db } from "@/lib/db";
+type UserRow = Prisma.UserGetPayload<{
+  select: {
+    id: true;
+    email: true;
+    name: true;
+    role: true;
+    createdAt: true;
+  };
+}>;
 
 export default async function AdminUsersPage() {
   const session = await auth();
@@ -19,16 +27,6 @@ export default async function AdminUsersPage() {
       createdAt: true,
     },
   });
-
-  type UserRow = Prisma.UserGetPayload<{
-    select: {
-      id: true;
-      email: true;
-      name: true;
-      role: true;
-      createdAt: true;
-    };
-  }>;
 
   return (
     <div>
