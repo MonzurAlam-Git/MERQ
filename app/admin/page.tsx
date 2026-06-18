@@ -1,40 +1,48 @@
 // app/admin/page.tsx
-import { db } from "@/lib/db";
+import { prisma } from "@/lib/prisma";
+
+export const metadata = { title: "Admin — MERQ" };
 
 export default async function AdminOverviewPage() {
-  const [orderCount, userCount, revenueResult] = await Promise.all([
-    db.order.count(),
-    db.user.count(),
-    db.order.aggregate({
+  const [orderCount, userCount, productCount, revenue] = await Promise.all([
+    prisma.order.count(),
+    prisma.user.count(),
+    prisma.product.count(),
+    prisma.order.aggregate({
       _sum: { total: true },
-      where: { status: { not: "CANCELLED" } },
+      where: { status: { in: ["PAID", "SHIPPED", "DELIVERED"] } },
     }),
   ]);
 
-  const revenue = revenueResult._sum.total ?? 0;
+  const revenueInDollars = ((revenue._sum.total ?? 0) / 100).toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    },
+  );
 
   const stats = [
-    { label: "Total Orders", value: orderCount.toString() },
-    { label: "Total Users", value: userCount.toString() },
-    {
-      label: "Total Revenue",
-      value: `$${(revenue / 100).toLocaleString("en-US", { minimumFractionDigits: 2 })}`,
-    },
+    { label: "Orders", value: orderCount },
+    { label: "Customers", value: userCount },
+    { label: "Products", value: productCount },
+    { label: "Revenue", value: revenueInDollars },
   ];
 
   return (
     <div>
-      <h1 className="font-serif text-3xl text-[#E8E4DE] mb-10">Overview</h1>
-      <div className="grid grid-cols-3 gap-6">
-        {stats.map((stat) => (
+      <h1 className="font-serif text-3xl mb-10">Overview</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {stats.map((s) => (
           <div
-            key={stat.label}
-            className="bg-[#1E1C18] border border-[#3A3830] p-8"
+            key={s.label}
+            className="bg-[#1E1C18] border border-[#3A3830] rounded p-6"
           >
-            <p className="text-[#7A7468] text-xs tracking-widest uppercase mb-3">
-              {stat.label}
+            <p className="text-xs text-[#7A7468] uppercase tracking-widest mb-2">
+              {s.label}
             </p>
-            <p className="font-serif text-4xl text-[#E8E4DE]">{stat.value}</p>
+            <p className="font-serif text-3xl">{s.value}</p>
           </div>
         ))}
       </div>

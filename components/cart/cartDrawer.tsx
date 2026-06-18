@@ -3,7 +3,6 @@
 
 import { type CartItem, useCartStore } from "@/lib/store/cartStore";
 
-import { createCheckoutSession } from "@/lib/actions/checkout";
 import { formatPrice } from "@/lib/formatPrice";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,27 +26,7 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleCheckout() {
-    closeCart();
-    setIsLoading(true);
-    try {
-      await createCheckoutSession(
-        items.map((item: CartItem) => ({
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-          image: item.image,
-          variant: item.variant,
-          size: item.size,
-          productId: item.productId,
-          slug: item.slug,
-        })),
-      );
-    } catch (error) {
-      console.error("Checkout failed:", error);
-      setIsLoading(false);
-      return; // don't redirect on failure
-    }
-    setIsLoading(false);
+    onClose();
     router.push("/checkout");
   }
 
@@ -234,17 +213,12 @@ export default function CartDrawer({ isOpen, onClose }: Props) {
               <p className="text-[#3A3830] text-[10px] tracking-[0.15em]">
                 Shipping and taxes calculated at checkout.
               </p>
-              {process.env.NODE_ENV === "development" && (
-                <p className="text-[#3A3830] text-[10px] tracking-[0.15em] text-center">
-                  Test card: 4242 4242 4242 4242
-                </p>
-              )}
+
               <button
                 onClick={handleCheckout}
-                disabled={isLoading}
-                className="w-full bg-[#E8E4DE] text-onyx py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200 disabled:opacity-50"
+                className="w-full bg-[#E8E4DE] text-onyx py-4 text-[11px] tracking-[0.3em] uppercase hover:bg-white transition-colors duration-200"
               >
-                {isLoading ? "Redirecting..." : "Checkout"}
+                Checkout
               </button>
               <button
                 onClick={clearCart}

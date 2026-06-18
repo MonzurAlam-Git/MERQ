@@ -1,73 +1,70 @@
 // app/admin/users/page.tsx
-import { auth } from "@/auth";
-import PromoteUserButton from "@/components/admin/PromoteUserButton";
-import { promoteUser } from "@/lib/actions/admin";
-import { db } from "@/lib/db";
-import type { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { demoteToCustomer, promoteToAdmin } from "./_actions";
 
-type UserRow = Prisma.UserGetPayload<{
-  select: {
-    id: true;
-    email: true;
-    name: true;
-    role: true;
-    createdAt: true;
-  };
-}>;
+export const metadata = { title: "Users — Admin — MERQ" };
 
 export default async function AdminUsersPage() {
-  const session = await auth();
-  const users = await db.user.findMany({
+  const users = await prisma.user.findMany({
     orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-      role: true,
-      createdAt: true,
-    },
+    include: { _count: { select: { orders: true } } },
   });
 
   return (
     <div>
-      <h1 className="font-serif text-3xl text-[#E8E4DE] mb-10">Users</h1>
-
-      <div className="border border-[#3A3830]">
-        <div className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] text-xs tracking-widest uppercase text-[#7A7468] px-6 py-3 border-b border-[#3A3830]">
-          <span>Name</span>
-          <span>Email</span>
-          <span>Role</span>
-          <span>Joined</span>
-          <span></span>
-        </div>
-
-        {users.map((user: UserRow) => (
+      <h1 className="font-serif text-3xl mb-8">Users</h1>
+      <div className="flex flex-col gap-3">
+        {users.map((user) => (
           <div
             key={user.id}
-            className="grid grid-cols-[2fr_2fr_1fr_1fr_auto] items-center px-6 py-4 border-b border-[#3A3830] last:border-0"
+            className="bg-[#1E1C18] border border-[#3A3830] rounded p-5 flex items-center justify-between gap-4 flex-wrap"
           >
-            <span className="text-[#E8E4DE] text-sm">{user.name ?? "—"}</span>
-            <span className="text-[#7A7468] text-sm">{user.email}</span>
-            <span
-              className={`text-xs tracking-widest uppercase ${
-                user.role === "ADMIN" ? "text-[#3D9E8C]" : "text-[#7A7468]"
-              }`}
-            >
-              {user.role}
-            </span>
-            <span className="text-[#7A7468] text-xs">
-              {new Date(user.createdAt).toLocaleDateString("en-GB", {
-                day: "2-digit",
-                month: "short",
-                year: "numeric",
-              })}
-            </span>
-            <PromoteUserButton
-              userId={user.id}
-              currentRole={user.role}
-              isSelf={user.email === session?.user?.email}
-              action={promoteUser}
-            />
+            <div>
+              <p className="text-sm">{user.name ?? "—"}</p>
+              <p className="text-xs text-[#7A7468]">{user.email}</p>
+              <p className="text-xs text-[#7A7468] mt-0.5">
+                {user._count.orders} order{user._count.orders !== 1 ? "s" : ""}{" "}
+                · Joined{" "}
+                {new Date(user.createdAt).toLocaleDateString("en-GB", {
+                  month: "short",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <span
+                className={`text-xs px-2 py-0.5 rounded border ${
+                  user.role === "ADMIN"
+                    ? "border-[#D4A853] text-[#D4A853]"
+                    : "border-[#3A3830] text-[#7A7468]"
+                }`}
+              >
+                {user.role}
+              </span>
+
+              {user.role === "CUSTOMER" ? (
+                <form action={promoteToAdmin}>
+                  <input type="hidden" name="userId" value={user.id} />
+                  <button
+                    type="submit"
+                    className="text-xs border border-[#3A3830] text-[#7A7468] px-3 py-1.5 hover:border-[#E8E4DE] hover:text-[#E8E4DE] transition-colors rounded"
+                  >
+                    Promote
+                  </button>
+                </form>
+              ) : (
+                <form action={demoteToCustomer}>
+                  <input type="hidden" name="userId" value={user.id} />
+                  <button
+                    type="submit"
+                    className="text-xs border border-red-800 text-red-500 px-3 py-1.5 hover:bg-red-900/20 transition-colors rounded"
+                  >
+                    Demote
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         ))}
       </div>

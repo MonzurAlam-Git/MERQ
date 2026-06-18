@@ -98,14 +98,24 @@ model Review {
 }
 
 model Order {
-  id        String      @id @default(cuid())
-  userId    String
-  status    OrderStatus @default(PENDING)
-  total     Int         // in cents
-  createdAt DateTime    @default(now())
+  id            String      @id @default(cuid())
+  userId        String
+  total         Float
+  status        OrderStatus @default(PENDING)
+  paymentMethod String?     // "STRIPE" | "BKASH" | "COD"
+  paymentId     String?     // trxID from bKash, paymentIntent from Stripe
+  createdAt     DateTime    @default(now())
+  user          User        @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+}
 
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderItems OrderItem[]
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }
 
 model OrderItem {
@@ -126,10 +136,4 @@ enum Role {
   ADMIN
 }
 
-enum OrderStatus {
-  PENDING
-  PAID
-  SHIPPED
-  DELIVERED
-  CANCELLED
-}
+

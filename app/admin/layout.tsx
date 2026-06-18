@@ -1,12 +1,13 @@
 // app/admin/layout.tsx
 import { auth } from "@/auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-const navLinks = [
-  { href: "/admin", label: "Overview" },
-  { href: "/admin/orders", label: "Orders" },
-  { href: "/admin/products", label: "Products" },
-  { href: "/admin/users", label: "Users" },
+const NAV = [
+  { label: "Overview", href: "/admin" },
+  { label: "Orders", href: "/admin/orders" },
+  { label: "Products", href: "/admin/products" },
+  { label: "Users", href: "/admin/users" },
 ];
 
 export default async function AdminLayout({
@@ -15,32 +16,32 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const session = await auth();
+  if (session?.user?.role !== "ADMIN") redirect("/");
 
   return (
-    <div className="min-h-screen bg-[#111010] flex">
-      <aside className="w-56 border-r border-[#3A3830] flex flex-col py-10 px-6 gap-1 shrink-0">
-        <p className="text-[#7A7468] text-xs tracking-widest uppercase mb-8">
+    <div className="min-h-screen flex bg-[#111010] text-[#E8E4DE]">
+      {/* Sidebar */}
+      <aside className="w-52 shrink-0 border-r border-[#3A3830] flex flex-col pt-12 px-6 gap-1">
+        <p className="font-serif text-lg mb-8 tracking-widest">MERQ</p>
+        <p className="text-xs text-[#7A7468] uppercase tracking-widest mb-4">
           Admin
         </p>
-        {navLinks.map((link) => (
+        {NAV.map((item) => (
           <Link
-            key={link.href}
-            href={link.href}
-            className="text-[#E8E4DE] text-sm py-2 px-3 hover:bg-[#1E1C18] transition-colors"
+            key={item.href}
+            href={item.href}
+            className="text-sm text-[#7A7468] hover:text-[#E8E4DE] py-1.5 transition-colors"
           >
-            {link.label}
+            {item.label}
           </Link>
         ))}
-        <div className="mt-auto pt-8 border-t border-[#3A3830]">
-          <p className="text-[#7A7468] text-xs truncate">
-            {session?.user?.email}
-          </p>
-          <p className="text-[#3D9E8C] text-xs tracking-widest uppercase mt-1">
-            Admin
-          </p>
+        <div className="mt-auto pb-8">
+          <p className="text-xs text-[#3A3830]">{session.user?.email}</p>
         </div>
       </aside>
-      <main className="flex-1 px-10 py-10 overflow-y-auto">{children}</main>
+
+      {/* Main */}
+      <main className="flex-1 px-10 py-12 overflow-y-auto">{children}</main>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // next.config.ts
 const nextConfig = {
+  allowedDevOrigins: ["confident-ladder-portside.ngrok-free.dev"],
   experimental: {
     viewTransition: true,
   },

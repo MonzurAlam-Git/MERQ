@@ -13,6 +13,7 @@
     "@auth/prisma-adapter": "^2.11.2",
     "@fontsource/cormorant-garamond": "^5.2.11",
     "@neondatabase/serverless": "^1.1.0",
+    "@ngrok/ngrok": "^1.7.0",
     "@prisma/adapter-neon": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@stripe/stripe-js": "^9.6.0",

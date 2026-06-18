@@ -1,7 +1,12 @@
-1. After a successful payment on the deployed production link, the application redirects to `http://localhost:3000/order-confirmation` instead of the production domain, indicating the post-payment callback URL is hardcoded to the local development server.
+1. Checkout as unauthorized user -> the cartdrawer engulf the viewport , blocking the login page in bg
 
-5.After adding to cart, there should be an indication to user that items have been added to cart
+2. After a successful payment on the deployed production link, the application redirects to `http://localhost:3000/order-confirmation` instead of the production domain, indicating the post-payment callback URL is hardcoded to the local development server.
+
+3.After adding to cart, there should be an indication to user that items have been added to cart
 _ Either Adding to cart option should be disabled for that specific variation
 _ A notification alert system
 
-8. No login/Logout option in mobile devices
+4. No login/Logout option in mobile devices
+
+5. After successful payment by bkash , on order confirmation page clickign view order crash the application
+6. Order confirmation page need to responsive
