@@ -2,6 +2,8 @@
 
 import { auth } from "@/auth";
 import ProductPanel from "@/components/shop/ProductPanel";
+import ReviewForm from "@/components/shop/ReviewForm";
+import ReviewList from "@/components/shop/ReviewList";
 import { db } from "@/lib/db";
 import { formatProduct, type DbProduct } from "@/lib/products";
 import type { Metadata } from "next";
@@ -64,6 +66,23 @@ export default async function ProductPage({
       }))
     : false;
 
+  const reviews = await db.review.findMany({
+    where: { productId: product.id },
+    orderBy: { createdAt: "desc" },
+    include: { user: { select: { name: true } } },
+  });
+
+  const userReview = session?.user?.id
+    ? await db.review.findUnique({
+        where: {
+          userId_productId: {
+            userId: session.user.id,
+            productId: product.id,
+          },
+        },
+      })
+    : null;
+
   return (
     <main className="min-h-screen bg-onyx pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -88,6 +107,36 @@ export default async function ProductPage({
             initialVariant={initialVariant}
             isWishlisted={isWishlisted}
           />
+
+          {/* Reviews */}
+          <div className="mt-24 border-t border-[#1E1C18] pt-16 grid grid-cols-1 lg:grid-cols-2 gap-16">
+            <div>
+              <h2 className="font-serif text-[#E8E4DE] text-2xl mb-10">
+                Reviews
+              </h2>
+              <ReviewList reviews={reviews} />
+            </div>
+
+            <div>
+              {!session ? (
+                <p className="text-[11px] tracking-[0.2em] uppercase text-[#3A3830]">
+                  <Link
+                    href="/login"
+                    className="hover:text-[#7A7468] transition-colors"
+                  >
+                    Sign in
+                  </Link>{" "}
+                  to leave a review.
+                </p>
+              ) : userReview ? (
+                <p className="text-[11px] tracking-[0.2em] uppercase text-[#3A3830]">
+                  You reviewed this.
+                </p>
+              ) : (
+                <ReviewForm productId={product.id} slug={product.slug} />
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </main>
