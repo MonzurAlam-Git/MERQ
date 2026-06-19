@@ -65,6 +65,7 @@ export async function POST(req: Request) {
     });
 
     const data = await res.json();
+    console.log("bKash create response:", data);
 
     if (!data.bkashURL) {
       // bKash failed — delete the pending order
@@ -77,6 +78,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ bkashURL: data.bkashURL });
   } catch (err) {
+    console.error("bKash create-payment error:", err);
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 }
