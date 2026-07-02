@@ -67,7 +67,7 @@ export default async function ProductPage({
     : false;
 
   const reviews = await db.review.findMany({
-    where: { productId: product.id },
+    where: { productId: product.id, hidden: false },
     orderBy: { createdAt: "desc" },
     include: { user: { select: { name: true } } },
   });

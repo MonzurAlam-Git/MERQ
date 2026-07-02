@@ -5,6 +5,8 @@ type Review = {
   rating: number;
   comment: string | null;
   createdAt: Date;
+  adminReply: string | null;
+  hidden: boolean;
   user: { name: string | null };
 };
 
@@ -77,6 +79,16 @@ export default function ReviewList({ reviews }: Props) {
               <p className="text-[13px] text-[#7A7468] leading-relaxed pl-0">
                 {r.comment}
               </p>
+            )}
+            {r.adminReply && (
+              <div className="mt-3 pl-4 border-l-2 border-[#3A3830]">
+                <p className="text-[10px] text-[#D4A853] uppercase tracking-[0.2em] mb-1">
+                  MERQ replied
+                </p>
+                <p className="text-[13px] text-[#7A7468] leading-relaxed">
+                  {r.adminReply}
+                </p>
+              </div>
             )}
           </div>
         ))}

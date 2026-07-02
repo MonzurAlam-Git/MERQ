@@ -31,7 +31,7 @@ const STATUS_COLOR: Record<OrderStatus, string> = {
 
 type OrderWithItems = Prisma.OrderGetPayload<{
   include: {
-    orderItems: {
+    items: {
       include: { product: true };
     };
   };
@@ -44,7 +44,7 @@ export default async function OrdersPage() {
   const orders = await db.order.findMany({
     where: { userId: session.user.id },
     include: {
-      orderItems: {
+      items: {
         include: { product: true },
       },
     },
@@ -117,34 +117,32 @@ export default async function OrdersPage() {
 
               {/* Expanded items */}
               <div className="border-t border-[#1E1C18] divide-y divide-[#1E1C18]">
-                {order.orderItems.map(
-                  (item: OrderWithItems["orderItems"][number]) => (
-                    <div
-                      key={item.id}
-                      className="flex items-center justify-between px-6 py-4"
-                    >
-                      <div className="flex items-center gap-4">
-                        <Link
-                          href={`/shop/${item.product.slug}`}
-                          className="font-serif text-[#E8E4DE] hover:text-white transition-colors"
-                        >
-                          {item.product.name}
-                        </Link>
-                        <span className="text-[#7A7468] text-[11px] tracking-[0.15em] uppercase">
-                          {item.variant} · {item.size}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-6 shrink-0">
-                        <span className="text-[#7A7468] text-[11px]">
-                          ×{item.quantity}
-                        </span>
-                        <span className="text-[#E8E4DE] text-sm">
-                          {formatPrice(item.price * item.quantity)}
-                        </span>
-                      </div>
+                {order.items.map((item: OrderWithItems["items"][number]) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between px-6 py-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Link
+                        href={`/shop/${item.product.slug}`}
+                        className="font-serif text-[#E8E4DE] hover:text-white transition-colors"
+                      >
+                        {item.product.name}
+                      </Link>
+                      <span className="text-[#7A7468] text-[11px] tracking-[0.15em] uppercase">
+                        {item.variant} · {item.size}
+                      </span>
                     </div>
-                  ),
-                )}
+                    <div className="flex items-center gap-6 shrink-0">
+                      <span className="text-[#7A7468] text-[11px]">
+                        ×{item.quantity}
+                      </span>
+                      <span className="text-[#E8E4DE] text-sm">
+                        {formatPrice(item.price * item.quantity)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </details>
           ))}

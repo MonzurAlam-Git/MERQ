@@ -83,19 +83,6 @@ model Wishlist {
   @@unique([userId, productId]) // one entry per user per product
 }
 
-model Review {
-  id        String   @id @default(cuid())
-  userId    String
-  productId Int
-  rating    Int      // 1–5
-  comment   String?
-  createdAt DateTime @default(now())
-
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, productId]) // one review per user per product
-}
 
 model Order {
   id            String      @id @default(cuid())
@@ -136,4 +123,19 @@ enum Role {
   ADMIN
 }
 
+model Review {
+  id           String    @id @default(cuid())
+  userId       String
+  productId    Int
+  rating       Int
+  comment      String?
+  adminReply   String?
+  adminReplyAt DateTime?
+  hidden       Boolean   @default(false)
+  createdAt    DateTime  @default(now())
 
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+}

@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "Outerwear", href: "/shop?category=outerwear" },
   { label: "Tailoring", href: "/shop?category=tailoring" },
   { label: "About", href: "/about" },
+  { label: "Experiment", href: "/experiment" },
 ] as const;
 
 type NavLink = (typeof NAV_LINKS)[number];

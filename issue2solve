@@ -8,6 +8,8 @@ _ A notification alert system
 
 4. No login/Logout option in mobile devices
 
-5. After successful payment by bkash , on order confirmation page clickign view order crash the application
+5. After successful payment by bkash , on order confirmation page clicking view order crash the application
 6. Order confirmation page need to responsive
 7. Demo order data need to be included to test the payment option along with copy option for website visitor
+
+8. From admin panel when update product There should be an alert/[Look for better option] after updating the price To let know the admin that price has been updated
